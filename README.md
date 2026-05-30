@@ -149,6 +149,14 @@ Real article → AI-assisted understanding → Word collection → Review → Lo
 
 <div align="center">
 
+### 🖼️ 界面预览 / Screenshot
+
+<img src="screenshot.png" alt="FinRead 精读界面 — 左侧外刊新闻，右侧 AI 精读、逐句翻译与生词卡片" width="100%">
+
+<sub>左：真实英文财经新闻　|　中：逐句精读与翻译　|　右：自动生成的生词卡片<br>Left: real financial news　|　Center: sentence-by-sentence reading & translation　|　Right: auto-generated word cards</sub>
+
+---
+
 **个人学习项目，欢迎自用于英语学习。**
 *A personal study project — feel free to use it for your own English learning.*
 
