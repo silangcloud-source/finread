@@ -5,20 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>建田车辆收租</title>
 <style>
-  :root{
-    --ink:#1b2330;--sub:#767b85;--faint:#a3a7ae;
-    --bg:#f3f3f0;--sheet:#fff;--line:#ecece9;--line2:#e2e2de;
-    --od:#a83a30;--odbg:#f6e9e7;--due:#8a6210;--duebg:#f4edda;--ok:#2c6a49;--okbg:#e6efe9;
-  }
+  :root{--ink:#1b2330;--sub:#767b85;--faint:#a3a7ae;--bg:#f3f3f0;--sheet:#fff;--line:#ecece9;--line2:#e2e2de;--od:#a83a30;--odbg:#f6e9e7;--due:#8a6210;--duebg:#f4edda;--ok:#2c6a49;--okbg:#e6efe9}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
-  body{font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
-    background:var(--bg);color:var(--ink);line-height:1.4;-webkit-font-smoothing:antialiased;
-    font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+  body{font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.4;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
   button,input{font-family:inherit}
   :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   .wrap{max-width:560px;margin:0 auto;min-height:100vh;background:var(--bg);padding-bottom:96px;position:relative}
-
   .mast{background:var(--ink);color:#fff;padding:18px 20px 20px}
   .mast .line{display:flex;align-items:center;justify-content:space-between}
   .mast .name{font-size:13px;letter-spacing:3px;color:#aeb4bd;font-weight:500}
@@ -28,51 +21,41 @@
   .stat .n{font-size:44px;font-weight:800;line-height:.9;letter-spacing:-1px}
   .stat .u{font-size:14px;color:#aeb4bd;letter-spacing:1px}
   .brk{margin-top:12px;font-size:12.5px;color:#9aa0a9;letter-spacing:.5px}
-  .brk .od{color:#e79a92} .brk .sep{color:#4a515c;margin:0 8px}
-
+  .brk .od{color:#e79a92}.brk .sep{color:#4a515c;margin:0 8px}
   .tabs{display:flex;gap:26px;padding:0 20px;background:var(--bg);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:9}
   .tab{background:none;border:none;padding:14px 0 11px;font-size:15px;color:var(--sub);font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:1px}
   .tab.on{color:var(--ink);font-weight:700;border-bottom-color:var(--ink)}
   .search{padding:12px 20px 4px}
   .search input{width:100%;border:1px solid var(--line2);background:#fff;border-radius:8px;padding:10px 13px;font-size:15px;outline:none;color:var(--ink)}
   .search input::placeholder{color:var(--faint)}
-
   .list{margin:10px 16px;background:var(--sheet);border:1px solid var(--line2);border-radius:12px;overflow:hidden}
-  .item{padding:14px 16px;border-top:1px solid var(--line)} .item:first-child{border-top:none}
+  .item{padding:14px 16px;border-top:1px solid var(--line)}.item:first-child{border-top:none}
   .ihead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  .plate{font-size:16.5px;font-weight:700;letter-spacing:.3px} .who{font-size:13px;color:var(--sub);margin-top:3px}
-  .right{text-align:right;flex-shrink:0} .amt{font-size:16px;font-weight:700} .amt .yen{font-size:12px;color:var(--faint);font-weight:500;margin-right:1px}
+  .plate{font-size:16.5px;font-weight:700;letter-spacing:.3px}.who{font-size:13px;color:var(--sub);margin-top:3px}
+  .right{text-align:right;flex-shrink:0}.amt{font-size:16px;font-weight:700}.amt .yen{font-size:12px;color:var(--faint);font-weight:500;margin-right:1px}
   .pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 8px;border-radius:5px;margin-top:6px;letter-spacing:.5px}
-  .pill.od{color:var(--od);background:var(--odbg)} .pill.due{color:var(--due);background:var(--duebg)}
-  .pill.ok{color:var(--ok);background:var(--okbg)} .pill.norm{color:var(--sub);background:#efefec}
+  .pill.od{color:var(--od);background:var(--odbg)}.pill.due{color:var(--due);background:var(--duebg)}
+  .pill.ok{color:var(--ok);background:var(--okbg)}.pill.norm{color:var(--sub);background:#efefec}
   .acts{display:flex;gap:8px;margin-top:12px}
   .b{flex:1;text-align:center;padding:10px;border-radius:8px;font-size:14.5px;font-weight:600;border:1px solid var(--line2);background:#fff;color:var(--ink);cursor:pointer;text-decoration:none;display:block}
-  .b.call{border-color:var(--ink)} .b.call.off{color:var(--faint);border-color:var(--line2);pointer-events:none}
+  .b.call{border-color:var(--ink)}.b.call.off{color:var(--faint);border-color:var(--line2);pointer-events:none}
   .b.paid{background:var(--ok);border-color:var(--ok);color:#fff}
-  .b.undo{background:#fff;color:var(--sub);flex:0 0 76px} .b.edit{flex:0 0 58px;color:var(--sub)}
-
+  .b.undo{background:#fff;color:var(--sub);flex:0 0 76px}.b.edit{flex:0 0 58px;color:var(--sub)}
   .empty{padding:56px 24px;text-align:center;color:var(--sub);font-size:15px;line-height:1.9}
   .foot{text-align:center;color:var(--faint);font-size:12px;padding:16px 24px 4px;line-height:1.8}
   .fab{position:absolute;right:16px;bottom:20px;background:var(--ink);color:#fff;border:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:600;letter-spacing:1px;box-shadow:0 4px 14px rgba(27,35,48,.28);cursor:pointer;z-index:30}
-  .fab.fixed{position:fixed;left:50%;transform:translateX(calc(280px - 100%));}
-
   .mask{position:fixed;inset:0;background:rgba(20,26,36,.42);z-index:40;display:none;align-items:flex-end;justify-content:center}
   .mask.on{display:flex}
   .sheet{background:#fff;width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:20px 20px 28px;max-height:88vh;overflow:auto}
   .sheet h3{margin:0 0 16px;font-size:17px;font-weight:700}
-  .field{margin-bottom:13px} .field label{font-size:12.5px;color:var(--sub);display:block;margin-bottom:6px;letter-spacing:.5px}
+  .field{margin-bottom:13px}.field label{font-size:12.5px;color:var(--sub);display:block;margin-bottom:6px;letter-spacing:.5px}
   .field input{width:100%;border:1px solid var(--line2);border-radius:8px;padding:11px 12px;font-size:16px;outline:none;color:var(--ink)}
   .field input:focus{border-color:var(--ink)}
-  .srow{display:flex;gap:10px;margin-top:4px} .srow .b{padding:12px}
-  .b.save{background:var(--ink);border-color:var(--ink);color:#fff} .b.cancel{color:var(--sub)}
+  .srow{display:flex;gap:10px;margin-top:4px}.srow .b{padding:12px}
+  .b.save{background:var(--ink);border-color:var(--ink);color:#fff}.b.cancel{color:var(--sub)}
   .del{margin-top:12px;width:100%;padding:11px;border:1px solid var(--odbg);background:var(--odbg);color:var(--od);border-radius:8px;font-weight:600;font-size:14.5px;cursor:pointer}
-
-  .setup{padding:34px 24px}
-  .setup .box{max-width:420px;margin:0 auto}
-  .setup h2{font-size:19px;font-weight:700;margin:0 0 8px}
-  .setup p{font-size:14px;color:var(--sub);line-height:1.8;margin:0 0 18px}
-  .setup .err{color:var(--od);font-size:13px;margin:0 0 14px}
-  .setup code{background:#e9e9e5;padding:1px 5px;border-radius:4px;font-size:13px;color:var(--ink)}
+  .setup{padding:34px 24px}.setup .box{max-width:420px;margin:0 auto}.setup h2{font-size:19px;font-weight:700;margin:0 0 8px}
+  .setup p{font-size:14px;color:var(--sub);line-height:1.8;margin:0 0 18px}.setup .err{color:var(--od);font-size:13px;margin:0 0 14px}
 </style>
 </head>
 <body>
@@ -82,10 +65,9 @@
       <div><div class="name">建田车辆收租</div><div class="date" id="today"></div></div>
       <button class="refresh" onclick="load()">刷新</button>
     </div>
-    <div class="stat"><span class="n" id="cui">–</span><span class="u">部　今日要催</span></div>
+    <div class="stat"><span class="n" id="cui">-</span><span class="u">部　今日要催</span></div>
     <div class="brk" id="sub">载入中</div>
   </div>
-
   <div id="app" style="display:none">
     <div class="tabs">
       <button class="tab on" data-tab="cui">要催</button>
@@ -94,13 +76,11 @@
     </div>
     <div class="search"><input id="q" placeholder="搜车牌或租户"></div>
     <div class="list" id="list"></div>
-    <div class="foot">收到租撳「已收」，全部人即时同步。每月月初自动重新计。</div>
-    <button class="fab" onclick="openForm()">＋ 加车</button>
+    <div class="foot">收到租撳「已收」，未收月份会继续累计，唔会月初自动消失。</div>
+    <button class="fab" onclick="openForm()">+ 加车</button>
   </div>
-
   <div id="setup" class="setup" style="display:none"></div>
 </div>
-
 <div class="mask" id="mask">
   <div class="sheet">
     <h3 id="formTitle">加车</h3>
@@ -108,155 +88,195 @@
     <div class="field"><label>租户</label><input id="f_tenant"></div>
     <div class="field"><label>电话</label><input id="f_phone" inputmode="numeric"></div>
     <div class="field"><label>月租金</label><input id="f_rent" inputmode="numeric"></div>
-    <div class="field"><label>交租日（每月几号，1–31）</label><input id="f_day" inputmode="numeric"></div>
+    <div class="field"><label>交租日（每月几号，1-31）</label><input id="f_day" inputmode="numeric"></div>
     <div class="field"><label>备注</label><input id="f_note"></div>
     <div class="srow"><button class="b cancel" onclick="closeForm()">取消</button><button class="b save" onclick="submitForm()">保存</button></div>
     <button class="del" id="delBtn" style="display:none" onclick="removeCar()">删除呢部车</button>
   </div>
 </div>
-
 <script>
-const TELEGRAPH_PATH = "jt-rent-data-07-07";
-const TELEGRAPH_TOKEN = "a8311f6f8da7a98be73a5581275cdd99eee7c36803531e3942d18dd66d6d";
-const TELEGRAPH_TITLE = "jt-rent-data";
-const TELEGRAPH_AUTHOR = "Jiantian";
-
-const SEED = [{"plate": "ACD9437", "tenant": "温国伦", "phone": "13316705884", "rent": 6680, "due_day": 1, "note": null}, {"plate": "AEJ2562", "tenant": "谭明", "phone": "18675875899", "rent": 6880, "due_day": 1, "note": null}, {"plate": "ACK7541", "tenant": "何金平", "phone": "18820868267", "rent": 6980, "due_day": 1, "note": null}, {"plate": "ACZ0472", "tenant": "吴科", "phone": "13560608169", "rent": 7080, "due_day": 1, "note": null}, {"plate": "BEU0596", "tenant": "彭群儒", "phone": "13560844656", "rent": 6880, "due_day": 3, "note": null}, {"plate": "ACL4027", "tenant": "林文龙", "phone": "15013151841", "rent": 6880, "due_day": 5, "note": null}, {"plate": "AEP1276", "tenant": "骆盼", "phone": "15085586552", "rent": 7080, "due_day": 6, "note": null}, {"plate": "ADB4677", "tenant": "骆春旭", "phone": "18818729253", "rent": 7080, "due_day": 6, "note": null}, {"plate": "AC43682", "tenant": "张秋林", "phone": "13750304834", "rent": 6680, "due_day": 6, "note": null}, {"plate": "AEC4457", "tenant": "肖建波", "phone": "15367156082", "rent": 6880, "due_day": 7, "note": null}, {"plate": "ADP9476", "tenant": "张翊辉", "phone": "15186026551", "rent": 6680, "due_day": 7, "note": null}, {"plate": "AC46127", "tenant": "李聪", "phone": "15073502119", "rent": 6880, "due_day": 7, "note": null}, {"plate": "BBP6432", "tenant": "廖德炉", "phone": "18011868315", "rent": 6889, "due_day": 7, "note": null}, {"plate": "AC45907", "tenant": "郭湘军", "phone": "13423159521", "rent": 6880, "due_day": 8, "note": null}, {"plate": "AC64096", "tenant": "郭彬", "phone": "13714273582", "rent": 6980, "due_day": 9, "note": null}, {"plate": "ACT4077", "tenant": "林航方", "phone": "16685641030", "rent": 7080, "due_day": 9, "note": null}, {"plate": "ACY7462", "tenant": "张飞", "phone": "18213740441", "rent": 6680, "due_day": 10, "note": null}, {"plate": "AC44796", "tenant": "李德升", "phone": "13527884499", "rent": 6880, "due_day": 10, "note": null}, {"plate": "AC54177", "tenant": "黄伟文", "phone": "13726367609", "rent": 6980, "due_day": 10, "note": null}, {"plate": "AC03478", "tenant": "任小满", "phone": "19902333033", "rent": 6780, "due_day": 11, "note": null}, {"plate": "AC49276", "tenant": "李康养", "phone": "13535659596", "rent": 6780, "due_day": 11, "note": null}, {"plate": "AC43895", "tenant": "屈伟", "phone": "15724930392", "rent": 6680, "due_day": 12, "note": null}, {"plate": "AC63476", "tenant": "陈健文", "phone": "15016153929", "rent": 6780, "due_day": 12, "note": null}, {"plate": "AC64418", "tenant": "董斌", "phone": "18372565388", "rent": 6680, "due_day": 13, "note": null}, {"plate": "AEX7655", "tenant": "黄强", "phone": "13297946575", "rent": 6980, "due_day": 13, "note": null}, {"plate": "AC43907", "tenant": "曾海清", "phone": "13929492164", "rent": 6980, "due_day": 13, "note": null}, {"plate": "AC17426", "tenant": "王海元", "phone": "19158118808", "rent": 6780, "due_day": 14, "note": null}, {"plate": "AC44976", "tenant": "杨海域", "phone": "18582711115", "rent": 6780, "due_day": 14, "note": null}, {"plate": "AEX7661", "tenant": "何秉恒", "phone": "13380543535", "rent": 6300, "due_day": 14, "note": null}, {"plate": "AC54906（以租待购）", "tenant": "刘蕴", "phone": "13450812862", "rent": 6200, "due_day": 14, "note": null}, {"plate": "AP61511", "tenant": "李会全", "phone": "19276535976", "rent": 6980, "due_day": 14, "note": null}, {"plate": "AC47611", "tenant": "黄受活", "phone": "19977780602", "rent": 6680, "due_day": 15, "note": null}, {"plate": "AC14967", "tenant": "邹海辉", "phone": "18148683451", "rent": 6500, "due_day": 16, "note": null}, {"plate": "AEN0780", "tenant": "黄延志", "phone": "15207654838", "rent": 6980, "due_day": 16, "note": null}, {"plate": "AEW5726", "tenant": "周建永", "phone": "13622727372", "rent": 6980, "due_day": 17, "note": null}, {"plate": "AEZ3557", "tenant": "刘松生", "phone": "13695222227", "rent": 6980, "due_day": 17, "note": null}, {"plate": "AEV7539", "tenant": "曾偶", "phone": "17825581083", "rent": 6980, "due_day": 17, "note": null}, {"plate": "AEV6719", "tenant": "何志波", "phone": "18666582442", "rent": 6980, "due_day": 17, "note": null}, {"plate": "AP66298", "tenant": "林益龙", "phone": "18681081357", "rent": 6680, "due_day": 17, "note": null}, {"plate": "ADM5956", "tenant": "卢根", "phone": "17802087060", "rent": 6900, "due_day": 17, "note": null}, {"plate": "ADQ9476", "tenant": "石齐珠", "phone": "15602228914", "rent": 6680, "due_day": 19, "note": null}, {"plate": "AP48527", "tenant": "柯承彪", "phone": "13923318997", "rent": 6980, "due_day": 19, "note": null}, {"plate": "AP23472", "tenant": "曾志新", "phone": "19513817530", "rent": 6980, "due_day": 19, "note": null}, {"plate": "AEV3172", "tenant": "曾刚", "phone": "16608260153", "rent": 6680, "due_day": 20, "note": null}, {"plate": "AEU1607", "tenant": "糟杰雄", "phone": "19925324775", "rent": 6680, "due_day": 20, "note": null}, {"plate": "AEU4337", "tenant": "夏昌文", "phone": "15112063363", "rent": 6680, "due_day": 20, "note": null}, {"plate": "AEW7310", "tenant": "蔡世明", "phone": "13925453018", "rent": 6500, "due_day": 20, "note": null}, {"plate": "AC47916", "tenant": "陈忠冬", "phone": "13870438805", "rent": 6460, "due_day": 20, "note": null}, {"plate": "AP53062", "tenant": "徐超", "phone": "18825704349", "rent": 6780, "due_day": 20, "note": null}, {"plate": "AC74465", "tenant": "梁永欢", "phone": "13129302643", "rent": 6680, "due_day": 21, "note": null}, {"plate": "AEV6721", "tenant": "杨孝来", "phone": "15184941030", "rent": 6980, "due_day": 22, "note": null}, {"plate": "AP68255", "tenant": "刘勇", "phone": "19961032515", "rent": 6980, "due_day": 22, "note": null}, {"plate": "AP67600", "tenant": "林常添", "phone": "13823454546", "rent": 6800, "due_day": 23, "note": null}, {"plate": "AC48623", "tenant": "李志龙", "phone": "15914283377", "rent": 6680, "due_day": 23, "note": null}, {"plate": "AEX7673", "tenant": "张进军", "phone": "18385994907", "rent": 6680, "due_day": 23, "note": null}, {"plate": "AP46469", "tenant": "罗仁财", "phone": "13825574502", "rent": 6580, "due_day": 23, "note": null}, {"plate": "ADM4359", "tenant": "潘诗钦", "phone": "18276201898", "rent": 6680, "due_day": 24, "note": null}, {"plate": "ABK5639", "tenant": "乐政华", "phone": "18777581286", "rent": 6880, "due_day": 24, "note": null}, {"plate": "ADH9636", "tenant": "叶荣鑫", "phone": "18318331747", "rent": 6980, "due_day": 25, "note": null}, {"plate": "AEV4639", "tenant": "欧阳锦松", "phone": "13549985456", "rent": 6200, "due_day": 25, "note": null}, {"plate": "AC74831", "tenant": "梁永欢", "phone": "13129302643", "rent": 6680, "due_day": 26, "note": null}, {"plate": "AEY3687", "tenant": "王刚", "phone": "18825386218", "rent": 6880, "due_day": 26, "note": null}, {"plate": "AC46419", "tenant": "杨军", "phone": "15681201600", "rent": 6400, "due_day": 26, "note": null}, {"plate": "ABA3566", "tenant": "刘训敏", "phone": "15967057203", "rent": 7080, "due_day": 26, "note": null}, {"plate": "AC09430", "tenant": "文锐", "phone": "13517185233", "rent": 6680, "due_day": 27, "note": null}, {"plate": "AC47556", "tenant": "吴柳", "phone": "13477887001", "rent": 6680, "due_day": 27, "note": null}, {"plate": "ADR4493", "tenant": "易聪", "phone": "13533565055", "rent": 6880, "due_day": 27, "note": null}, {"plate": "AC29453", "tenant": "皮家斌", "phone": "13207362767", "rent": 6780, "due_day": 27, "note": null}, {"plate": "AC43770", "tenant": "谢乃康", "phone": "13168442504", "rent": 6780, "due_day": 28, "note": null}, {"plate": "AP52726", "tenant": "彭星剑", "phone": "18825707038", "rent": 6880, "due_day": 28, "note": null}, {"plate": "ACL1743", "tenant": "谢山西", "phone": "15186571970", "rent": 6980, "due_day": 28, "note": null}, {"plate": "AC49079", "tenant": "谭维波", "phone": "15976459775", "rent": 6680, "due_day": 30, "note": null}, {"plate": "AC46011", "tenant": "郑少豪", "phone": "19269110780", "rent": 6680, "due_day": 31, "note": null}, {"plate": "建田AE86585", "tenant": "韦凯雄", "phone": null, "rent": 2680, "due_day": 1, "note": null}, {"plate": "建田AAJ0429", "tenant": "覃佟", "phone": null, "rent": 4500, "due_day": 1, "note": null}, {"plate": "ABV8317 黎文伟", "tenant": "熊勇", "phone": null, "rent": 3880, "due_day": 1, "note": null}, {"plate": "ADB7407杨正海", "tenant": "吴烨", "phone": null, "rent": 3880, "due_day": 1, "note": null}, {"plate": "ABZ2783胡兆雄", "tenant": "张庆云", "phone": null, "rent": 3300, "due_day": 3, "note": null}, {"plate": "建田AB94431", "tenant": "车坤年", "phone": null, "rent": 4580, "due_day": 4, "note": null}, {"plate": "建田ABN4224", "tenant": "彭思清", "phone": null, "rent": 3480, "due_day": 4, "note": null}, {"plate": "建田AE86223", "tenant": "尤泽初", "phone": null, "rent": 2800, "due_day": 4, "note": null}, {"plate": "建田AEW6086", "tenant": "曾祝成", "phone": null, "rent": 5000, "due_day": 4, "note": null}, {"plate": "风云AC28531", "tenant": "余正方", "phone": null, "rent": 2700, "due_day": 6, "note": null}, {"plate": "建田AE86562", "tenant": "宋留尿", "phone": null, "rent": 2680, "due_day": 6, "note": null}, {"plate": "建田AE86488", "tenant": "黄威驰", "phone": null, "rent": 2880, "due_day": 7, "note": null}, {"plate": "EDX5520 杜永善", "tenant": "黎永权", "phone": null, "rent": 4100, "due_day": 7, "note": null}, {"plate": "AA14291曾凡泳", "tenant": "梁以礼", "phone": null, "rent": 3600, "due_day": 7, "note": null}, {"plate": "AC45072 徐厅", "tenant": "马树森", "phone": null, "rent": 3800, "due_day": 7, "note": null}, {"plate": "ADJ5495朱永胜", "tenant": "孙辉", "phone": null, "rent": 3780, "due_day": 7, "note": null}, {"plate": "建田AEH1913", "tenant": "覃世文", "phone": null, "rent": 4150, "due_day": 8, "note": null}, {"plate": "建田ACY0482", "tenant": "赵建华", "phone": null, "rent": 4180, "due_day": 9, "note": null}, {"plate": "建田ADQ4728", "tenant": "郑永强", "phone": null, "rent": 4180, "due_day": 9, "note": null}, {"plate": "ACW8386乔生洲", "tenant": "张保卫", "phone": null, "rent": 3700, "due_day": 9, "note": null}, {"plate": "ACJ8631 黄明", "tenant": "李耀康", "phone": null, "rent": 3780, "due_day": 9, "note": null}, {"plate": "JDA2665 刘贵洲", "tenant": "朱美秀", "phone": null, "rent": 3680, "due_day": 12, "note": null}, {"plate": "建田AE98408", "tenant": "谭敏彪", "phone": null, "rent": 3130, "due_day": 13, "note": null}, {"plate": "建田AE86583", "tenant": "高建琴", "phone": null, "rent": 2800, "due_day": 13, "note": null}, {"plate": "ABV3205余健", "tenant": "李成胜", "phone": null, "rent": 3600, "due_day": 14, "note": null}, {"plate": "AC60399梁天聪", "tenant": "李振森", "phone": null, "rent": 3680, "due_day": 14, "note": null}, {"plate": "建田AE24587", "tenant": "冯锦洪", "phone": null, "rent": 4180, "due_day": 15, "note": "每月15/28号（分两次）"}, {"plate": "AB29082 黄培坚", "tenant": "冯铭辉", "phone": null, "rent": 2880, "due_day": 15, "note": null}, {"plate": "建田AAY6441", "tenant": "麦海旋", "phone": null, "rent": 4500, "due_day": 15, "note": null}, {"plate": "EDS9945 何浚文", "tenant": "唐小林", "phone": null, "rent": 3980, "due_day": 15, "note": null}, {"plate": "AB96140 张月明", "tenant": "熊祥", "phone": null, "rent": 3880, "due_day": 15, "note": null}, {"plate": "建田AA04031", "tenant": "廖建忠", "phone": null, "rent": 4380, "due_day": 15, "note": null}, {"plate": "ADQ0483候开富", "tenant": "柒辉寿", "phone": null, "rent": 3700, "due_day": 18, "note": null}, {"plate": "ACU2380陈高明", "tenant": "朱广强", "phone": null, "rent": 3888, "due_day": 18, "note": null}, {"plate": "EAC4498 王一好", "tenant": "张金福", "phone": null, "rent": 4300, "due_day": 19, "note": null}, {"plate": "建田ABZ4931", "tenant": "陈金发", "phone": null, "rent": 4200, "due_day": 20, "note": null}, {"plate": "建田AAU7413", "tenant": "梁天聪", "phone": null, "rent": 6200, "due_day": 22, "note": null}, {"plate": "建田ACY8795", "tenant": "罗锡强", "phone": null, "rent": 4180, "due_day": 21, "note": null}, {"plate": "TDX8538汤俊添", "tenant": "刘文裕", "phone": null, "rent": 3980, "due_day": 21, "note": null}, {"plate": "AA46317 陈祖强", "tenant": "邬越", "phone": null, "rent": 3780, "due_day": 21, "note": null}, {"plate": "风云AB33930", "tenant": "江权力", "phone": null, "rent": 3180, "due_day": 22, "note": null}, {"plate": "ADY4387陈连富", "tenant": "吴永麟", "phone": null, "rent": 3680, "due_day": 23, "note": null}, {"plate": "ACD0170李圣海", "tenant": "樊嘉俊", "phone": null, "rent": 3680, "due_day": 23, "note": null}, {"plate": "建田ABK9741", "tenant": "杨呈礼", "phone": null, "rent": 4380, "due_day": 23, "note": null}, {"plate": "建田AEH4033", "tenant": "陈忠桂", "phone": null, "rent": 4580, "due_day": 23, "note": null}, {"plate": "风云AAC3591", "tenant": "江焕", "phone": null, "rent": 3180, "due_day": 23, "note": null}, {"plate": "ACK9881覃会洋", "tenant": "植美材", "phone": null, "rent": 3680, "due_day": 24, "note": null}, {"plate": "ACM7338 潘浩坚", "tenant": "高晋强", "phone": null, "rent": 3650, "due_day": 26, "note": null}, {"plate": "ABA4173赵见喜", "tenant": "贺文军", "phone": null, "rent": 3600, "due_day": 26, "note": null}, {"plate": "ADU9473植奇涛", "tenant": "蒙树智", "phone": null, "rent": 3580, "due_day": 26, "note": null}, {"plate": "ACU3227梁广明", "tenant": "余春光", "phone": null, "rent": 3980, "due_day": 26, "note": null}, {"plate": "建田ABK2013", "tenant": "殷剑峰", "phone": null, "rent": 4100, "due_day": 27, "note": null}, {"plate": "TD90895李育林", "tenant": "陈少龙", "phone": null, "rent": 2980, "due_day": 27, "note": null}, {"plate": "建田AA37994", "tenant": "吴志勇", "phone": null, "rent": 6280, "due_day": 27, "note": null}, {"plate": "AC06138 黄宇青", "tenant": "李炳根", "phone": null, "rent": 3750, "due_day": 28, "note": null}, {"plate": "AC33129 梁健豪", "tenant": "徐明", "phone": null, "rent": 3700, "due_day": 28, "note": null}, {"plate": "EA05215 潘浩坚", "tenant": "邓木香", "phone": null, "rent": 3880, "due_day": 28, "note": null}, {"plate": "ANN7501 张勇军", "tenant": "关韶兵", "phone": null, "rent": 3600, "due_day": 28, "note": null}, {"plate": "AD47617莫深章", "tenant": "彭才清", "phone": null, "rent": 3680, "due_day": 28, "note": null}, {"plate": "建田AEL3418", "tenant": "余炳强", "phone": null, "rent": null, "due_day": 28, "note": null}, {"plate": "AAM7407黎昭晓", "tenant": "吴俊", "phone": null, "rent": 3880, "due_day": 28, "note": null}, {"plate": "ACD4202肖顺文", "tenant": "王业朋", "phone": null, "rent": 3780, "due_day": 27, "note": null}, {"plate": "ACM9308", "tenant": null, "phone": null, "rent": null, "due_day": null, "note": null}, {"plate": "建田AE85103", "tenant": null, "phone": null, "rent": null, "due_day": null, "note": null}, {"plate": "建田AAU4413", "tenant": null, "phone": null, "rent": null, "due_day": null, "note": null}];
+const TELEGRAPH_PATH="jt-rent-data-07-07";
+const TELEGRAPH_TOKEN="a8311f6f8da7a98be73a5581275cdd99eee7c36803531e3942d18dd66d6d";
+const TELEGRAPH_TITLE="jt-rent-data";
+const TELEGRAPH_AUTHOR="Jiantian";
+const TRACK_START_MONTH="2026-07";
 const today=new Date();today.setHours(0,0,0,0);
-let CARS=[],tab='cui',q='',editing=null;
+let DATA={version:2,track_start:TRACK_START_MONTH,cars:[],payments:{}},CARS=[],tab="cui",q="",editing=null;
+
 const dataUrl=()=>`https://api.telegra.ph/getPage/${TELEGRAPH_PATH}?return_content=true&_=${Date.now()}`;
-function pageContent(cars){return JSON.stringify([{tag:'pre',children:[JSON.stringify(cars)]}]);}
-async function fetchCars(){
-  const r=await fetch(dataUrl(),{cache:'no-store'});
-  const j=await r.json();
-  if(!j.ok)throw new Error(j.error||'读取失败');
-  const node=(j.result.content||[]).find(n=>n.tag==='pre');
-  const raw=node&&node.children?node.children.join(''):'[]';
-  const data=JSON.parse(raw);
-  return Array.isArray(data)?data:(data.cars||[]);
+const DIM=(y,m)=>new Date(y,m+1,0).getDate();
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const ym=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+const thisMonth=()=>ym(today);
+function parseYM(m){const a=m.split("-").map(Number);return new Date(a[0],a[1]-1,1);}
+function nextYM(m){const d=parseYM(m);d.setMonth(d.getMonth()+1);return ym(d);}
+function cmpYM(a,b){return a===b?0:(a<b?-1:1);}
+function monthLabel(m){const a=m.split("-");return Number(a[0])+"年"+Number(a[1])+"月";}
+function paymentKey(id,m){return id+":"+m;}
+function pageContent(data){return JSON.stringify([{tag:"pre",children:[JSON.stringify(data)]}]);}
+
+function normalizeData(data){
+  if(Array.isArray(data)){
+    const payments={};
+    const cars=data.map(c=>{
+      const car={...c,active_from:c.active_from||TRACK_START_MONTH};
+      if(car.last_paid)payments[paymentKey(car.id,String(car.last_paid).slice(0,7))]={paid_at:car.last_paid};
+      delete car.last_paid;
+      return car;
+    });
+    return {version:2,track_start:TRACK_START_MONTH,cars,payments};
+  }
+  const start=data.track_start||TRACK_START_MONTH;
+  const cars=(data.cars||[]).map(c=>({...c,active_from:c.active_from||start}));
+  return {version:2,track_start:start,cars,payments:data.payments||{}};
 }
-async function saveCars(cars){
+async function fetchData(){
+  const r=await fetch(dataUrl(),{cache:"no-store"});
+  const j=await r.json();
+  if(!j.ok)throw new Error(j.error||"读取失败");
+  const node=(j.result.content||[]).find(n=>n.tag==="pre");
+  const raw=node&&node.children?node.children.join(""):"[]";
+  return normalizeData(JSON.parse(raw));
+}
+async function saveData(data){
+  data=normalizeData(data);
   const p=new URLSearchParams();
-  p.set('access_token',TELEGRAPH_TOKEN);
-  p.set('title',TELEGRAPH_TITLE);
-  p.set('author_name',TELEGRAPH_AUTHOR);
-  p.set('content',pageContent(cars));
-  p.set('return_content','false');
-  const r=await fetch(`https://api.telegra.ph/editPage/${TELEGRAPH_PATH}`,{method:'POST',body:p});
+  p.set("access_token",TELEGRAPH_TOKEN);
+  p.set("title",TELEGRAPH_TITLE);
+  p.set("author_name",TELEGRAPH_AUTHOR);
+  p.set("content",pageContent(data));
+  p.set("return_content","false");
+  const r=await fetch(`https://api.telegra.ph/editPage/${TELEGRAPH_PATH}`,{method:"POST",body:p});
   const j=await r.json();
-  if(!j.ok)throw new Error(j.error||'保存失败');
-  CARS=cars;
+  if(!j.ok)throw new Error(j.error||"保存失败");
+  DATA=data;CARS=data.cars;
 }
-async function updateCars(fn){
-  const latest=await fetchCars();
+async function updateData(fn){
+  const latest=await fetchData();
   await fn(latest);
-  await saveCars(latest);
+  await saveData(latest);
   render();
 }
 async function load(){
-  try{document.getElementById('sub').textContent='载入中';
-    CARS=await fetchCars();
-    document.getElementById('setup').style.display='none';
-    document.getElementById('app').style.display='block';render();
-  }catch(e){showSetup('连接云端数据失败，请稍后再试。<br>'+String(e).slice(0,120));}
+  try{
+    document.getElementById("sub").textContent="载入中";
+    DATA=await fetchData();CARS=DATA.cars;
+    document.getElementById("setup").style.display="none";
+    document.getElementById("app").style.display="block";
+    render();
+  }catch(e){showSetup("连接云端数据失败，请稍后再试。<br>"+String(e).slice(0,120));}
 }
 function showSetup(err){
-  document.getElementById('app').style.display='none';
-  document.getElementById('cui').textContent='–';document.getElementById('sub').textContent='未连接';
-  const s=document.getElementById('setup');s.style.display='block';
-  s.innerHTML='<div class="box"><h2>云端连接失败</h2>'
-    +'<p>数据已设置为多人共享在线同步。请确认手机有网络，然后再刷新。</p>'
-    +(err?'<p class="err">'+err+'</p>':'')
-    +'<button class="b save" style="width:100%;margin-top:6px" onclick="load()">重新连接</button></div>';
+  document.getElementById("app").style.display="none";
+  document.getElementById("cui").textContent="-";
+  document.getElementById("sub").textContent="未连接";
+  const s=document.getElementById("setup");s.style.display="block";
+  s.innerHTML='<div class="box"><h2>云端连接失败</h2><p>数据已设置为多人共享在线同步。请确认手机有网络，然后再刷新。</p>'+(err?'<p class="err">'+err+"</p>":"")+'<button class="b save" style="width:100%;margin-top:6px" onclick="load()">重新连接</button></div>';
 }
-const DIM=(y,m)=>new Date(y,m+1,0).getDate();
-const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-const fmt=d=>(d.getMonth()+1)+'月'+d.getDate()+'日';
-function dueDate(day){const y=today.getFullYear(),m=today.getMonth();return new Date(y,m,Math.min(day,DIM(y,m)));}
-function paidThisMonth(c){if(!c.last_paid)return false;const d=new Date(c.last_paid+'T00:00:00');return d.getFullYear()===today.getFullYear()&&d.getMonth()===today.getMonth();}
+function isPaid(c,m){return !!DATA.payments[paymentKey(c.id,m)];}
+function monthDueDate(c,m){const d=parseYM(m);return new Date(d.getFullYear(),d.getMonth(),Math.min(c.due_day,DIM(d.getFullYear(),d.getMonth())));}
+function dueDate(day){return monthDueDate({due_day:day},thisMonth());}
+function collectableMonths(c,includeTomorrow=true){
+  if(!c.due_day)return[];
+  const limit=new Date(today);if(includeTomorrow)limit.setDate(limit.getDate()+1);
+  const out=[];let m=c.active_from||DATA.track_start||TRACK_START_MONTH;
+  while(cmpYM(m,thisMonth())<=0){
+    const due=monthDueDate(c,m);
+    if(due<=limit&&!isPaid(c,m))out.push({month:m,due,diff:Math.round((due-today)/86400000)});
+    m=nextYM(m);
+  }
+  return out;
+}
+function paidThisMonth(c){return isPaid(c,thisMonth());}
 function status(c){
-  if(!c.due_day)return{key:'norm',cls:'norm',label:'—',diff:9999};
+  if(!c.due_day)return{key:"norm",cls:"norm",label:"-",diff:9999,unpaid:[]};
+  const unpaid=collectableMonths(c,true);
+  if(unpaid.length){
+    const first=unpaid[0],over=unpaid.filter(x=>x.diff<0);
+    if(over.length)return{key:"od",cls:"od",label:unpaid.length>1?"欠"+unpaid.length+"期":"逾期"+(-first.diff)+"天",diff:first.diff,unpaid};
+    if(first.diff===0)return{key:"due",cls:"due",label:"今日到期",diff:first.diff,unpaid};
+    if(first.diff===1)return{key:"due",cls:"due",label:"明日到期",diff:first.diff,unpaid};
+  }
   const due=dueDate(c.due_day),diff=Math.round((due-today)/86400000);
-  if(paidThisMonth(c))return{key:'ok',cls:'ok',label:'已收',diff};
-  if(diff<0)return{key:'od',cls:'od',label:'逾期'+(-diff)+'天',diff};
-  if(diff===0)return{key:'due',cls:'due',label:'今日到期',diff};
-  if(diff===1)return{key:'due',cls:'due',label:'明日到期',diff};
-  return{key:'norm',cls:'norm',label:fmt(due)+'到期',diff};
+  if(paidThisMonth(c))return{key:"ok",cls:"ok",label:"本月已收",diff,unpaid:[]};
+  if(diff<0)return{key:"norm",cls:"norm",label:"下月待收",diff:9999,unpaid:[]};
+  return{key:"norm",cls:"norm",label:(due.getMonth()+1)+"月"+due.getDate()+"日到期",diff,unpaid:[]};
 }
-const needCui=s=>s.key==='od'||s.key==='due';
-document.getElementById('today').textContent=today.getFullYear()+'年'+(today.getMonth()+1)+'月'+today.getDate()+'日';
+const needCui=s=>s.key==="od"||s.key==="due";
+document.getElementById("today").textContent=today.getFullYear()+"年"+(today.getMonth()+1)+"月"+today.getDate()+"日";
 
 function render(){
   if(CARS.length===0){
-    document.getElementById('cui').textContent='0';
-    document.getElementById('sub').textContent='云端仲未有车';
-    document.getElementById('list').innerHTML=
-      '<div class="empty">云端数据库仲係空嘅。<br><br>'
-      +'<button class="b save" style="max-width:220px;margin:0 auto" onclick="importSeed(this)">导入 138 部车</button>'
-      +'<br><span style="font-size:12.5px;color:var(--faint)">只需撳一次，之后自动同步</span></div>';
+    document.getElementById("cui").textContent="0";
+    document.getElementById("sub").textContent="云端仲未有车";
+    document.getElementById("list").innerHTML='<div class="empty">云端数据库仲未有车辆资料。</div>';
     return;
   }
   let rows=CARS.map(c=>({c,s:status(c)}));
   const cuiRows=rows.filter(r=>needCui(r.s));
-  const odN=cuiRows.filter(r=>r.s.key==='od').length;
-  const amt=cuiRows.reduce((a,r)=>a+(r.c.rent||0),0);
-  document.getElementById('cui').textContent=cuiRows.length;
-  document.getElementById('sub').innerHTML='逾期 <span class="od">'+odN+'</span> 部<span class="sep">·</span>应催 ¥'+amt.toLocaleString()+'<span class="sep">·</span>共 '+CARS.length+' 部车';
-  if(tab==='cui')rows=cuiRows;else if(tab==='ok')rows=rows.filter(r=>r.s.key==='ok');
-  if(q){const k=q.trim();rows=rows.filter(r=>(r.c.plate||'').includes(k)||(r.c.tenant||'').includes(k));}
-  if(tab==='cui')rows.sort((a,b)=>a.s.diff-b.s.diff);else rows.sort((a,b)=>(a.c.due_day||99)-(b.c.due_day||99));
-  const list=document.getElementById('list');
-  if(!rows.length){list.innerHTML='<div class="empty">'+(tab==='cui'?'今日冇车要催':tab==='ok'?'本月仲未有已收记录':'揾唔到相符嘅车')+'</div>';return;}
-  const showActs=tab!=='all';
+  const odN=cuiRows.filter(r=>r.s.key==="od").length;
+  const qi=cuiRows.reduce((a,r)=>a+(r.s.unpaid&&r.s.unpaid.length?r.s.unpaid.length:1),0);
+  const amt=cuiRows.reduce((a,r)=>a+(r.c.rent||0)*(r.s.unpaid&&r.s.unpaid.length?r.s.unpaid.length:1),0);
+  document.getElementById("cui").textContent=cuiRows.length;
+  document.getElementById("sub").innerHTML='逾期 <span class="od">'+odN+'</span> 部<span class="sep">·</span>欠租 '+qi+' 期<span class="sep">·</span>应催 ¥'+amt.toLocaleString()+'<span class="sep">·</span>共 '+CARS.length+" 部车";
+  if(tab==="cui")rows=cuiRows;else if(tab==="ok")rows=rows.filter(r=>paidThisMonth(r.c));
+  if(q){const k=q.trim();rows=rows.filter(r=>(r.c.plate||"").includes(k)||(r.c.tenant||"").includes(k));}
+  if(tab==="cui")rows.sort((a,b)=>a.s.diff-b.s.diff);else rows.sort((a,b)=>(a.c.due_day||99)-(b.c.due_day||99));
+  const list=document.getElementById("list");
+  if(!rows.length){list.innerHTML='<div class="empty">'+(tab==="cui"?"今日冇车要催":tab==="ok"?"本月仲未有已收记录":"揾唔到相符嘅车")+"</div>";return;}
+  const showActs=tab!=="all";
   list.innerHTML=rows.map(({c,s})=>{
-    const phone=(c.phone||'').trim();
-    const amtHtml=c.rent?'<span class="yen">¥</span>'+c.rent.toLocaleString():'—';
-    const who='租户 '+(c.tenant||'—')+'　交租日 '+(c.due_day||'—')+'号'+(c.note?'　'+c.note:'');
-    let acts='';
+    const phone=(c.phone||"").trim();
+    const amtHtml=c.rent?'<span class="yen">¥</span>'+c.rent.toLocaleString():"-";
+    const owe=s.unpaid&&s.unpaid.length?"　欠租 "+s.unpaid.map(x=>monthLabel(x.month)).join("、"):"";
+    const who="租户 "+(c.tenant||"-")+"　交租日 "+(c.due_day||"-")+"号"+owe+(c.note?"　"+c.note:"");
+    let acts="";
     if(showActs){
       const call=phone?'<a class="b call" href="tel:'+phone+'">致电</a>':'<span class="b call off">无电话</span>';
-      const main=s.key==='ok'?'<button class="b undo" onclick="undo('+c.id+')">撤销</button>':'<button class="b paid" onclick="markPaid('+c.id+')">已收</button>';
-      acts='<div class="acts">'+call+'<button class="b edit" onclick="openForm('+c.id+')">改</button>'+main+'</div>';
+      const paidText=s.unpaid&&s.unpaid.length>1?"收一期":"已收";
+      const main=tab==="ok"?'<button class="b undo" onclick="undo('+c.id+')">撤销</button>':'<button class="b paid" onclick="markPaid('+c.id+')">'+paidText+"</button>";
+      acts='<div class="acts">'+call+'<button class="b edit" onclick="openForm('+c.id+')">改</button>'+main+"</div>";
     }
-    const rc=showActs?'':' onclick="openForm('+c.id+')" style="cursor:pointer"';
-    return '<div class="item"'+rc+'><div class="ihead"><div><div class="plate">'+(c.plate||'—')+'</div><div class="who">'+who+'</div></div>'
-      +'<div class="right"><div class="amt">'+amtHtml+'</div><span class="pill '+s.cls+'">'+s.label+'</span></div></div>'+acts+'</div>';
-  }).join('');
+    const rc=showActs?"":' onclick="openForm('+c.id+')" style="cursor:pointer"';
+    return '<div class="item"'+rc+'><div class="ihead"><div><div class="plate">'+(c.plate||"-")+'</div><div class="who">'+who+'</div></div><div class="right"><div class="amt">'+amtHtml+'</div><span class="pill '+s.cls+'">'+s.label+"</span></div></div>"+acts+"</div>";
+  }).join("");
 }
-async function importSeed(btn){
-  if(btn){btn.textContent='导入中…';btn.style.pointerEvents='none';}
-  try{
-    const seed=SEED.map((c,i)=>({id:i+1,last_paid:null,...c}));
-    await saveCars(seed);
-    await load();
-  }catch(e){alert('导入失败：'+e);if(btn){btn.textContent='导入 138 部车';btn.style.pointerEvents='auto';}}
+async function markPaid(id){
+  try{await updateData(data=>{DATA=data;const c=data.cars.find(x=>x.id===id);const m=c&&collectableMonths(c,true)[0];if(c&&m)data.payments[paymentKey(id,m.month)]={paid_at:iso(today)};});}
+  catch(e){alert("保存失败："+e);}
 }
-async function markPaid(id){try{await updateCars(cars=>{const c=cars.find(x=>x.id===id);if(c)c.last_paid=iso(today);});}catch(e){alert('保存失败：'+e);}}
-async function undo(id){try{await updateCars(cars=>{const c=cars.find(x=>x.id===id);if(c)c.last_paid=null;});}catch(e){alert('失败：'+e);}}
+async function undo(id){
+  try{await updateData(data=>{delete data.payments[paymentKey(id,thisMonth())];});}
+  catch(e){alert("失败："+e);}
+}
 function openForm(id){
-  editing=id||null;const t=document.getElementById('formTitle'),del=document.getElementById('delBtn');const g=k=>document.getElementById('f_'+k);
-  if(editing){const c=CARS.find(x=>x.id===editing);t.textContent='改资料';del.style.display='block';
-    g('plate').value=c.plate||'';g('tenant').value=c.tenant||'';g('phone').value=c.phone||'';g('rent').value=c.rent||'';g('day').value=c.due_day||'';g('note').value=c.note||'';}
-  else{t.textContent='加车';del.style.display='none';['plate','tenant','phone','rent','day','note'].forEach(k=>g(k).value='');}
-  document.getElementById('mask').classList.add('on');
+  editing=id||null;const t=document.getElementById("formTitle"),del=document.getElementById("delBtn");const g=k=>document.getElementById("f_"+k);
+  if(editing){const c=CARS.find(x=>x.id===editing);t.textContent="改资料";del.style.display="block";g("plate").value=c.plate||"";g("tenant").value=c.tenant||"";g("phone").value=c.phone||"";g("rent").value=c.rent||"";g("day").value=c.due_day||"";g("note").value=c.note||"";}
+  else{t.textContent="加车";del.style.display="none";["plate","tenant","phone","rent","day","note"].forEach(k=>g(k).value="");}
+  document.getElementById("mask").classList.add("on");
 }
-function closeForm(){document.getElementById('mask').classList.remove('on');}
+function closeForm(){document.getElementById("mask").classList.remove("on");}
 async function submitForm(){
-  const g=k=>document.getElementById('f_'+k).value.trim();
-  const body={plate:g('plate')||null,tenant:g('tenant')||null,phone:g('phone')||null,rent:g('rent')?parseInt(g('rent')):null,due_day:g('day')?parseInt(g('day')):null,note:g('note')||null};
+  const g=k=>document.getElementById("f_"+k).value.trim();
+  const body={plate:g("plate")||null,tenant:g("tenant")||null,phone:g("phone")||null,rent:g("rent")?parseInt(g("rent")):null,due_day:g("day")?parseInt(g("day")):null,note:g("note")||null};
   try{
-    await updateCars(cars=>{
+    await updateData(data=>{
+      const cars=data.cars;
       if(editing){const i=cars.findIndex(x=>x.id===editing);if(i>=0)cars[i]={...cars[i],...body};}
-      else{const id=cars.reduce((m,c)=>Math.max(m,c.id||0),0)+1;cars.push({id,last_paid:null,...body});}
+      else{const id=cars.reduce((m,c)=>Math.max(m,c.id||0),0)+1;cars.push({id,active_from:thisMonth(),...body});}
     });
     closeForm();await load();
-  }catch(e){alert('保存失败：'+e);}
+  }catch(e){alert("保存失败："+e);}
 }
-async function removeCar(){if(!editing)return;if(!confirm('确定删除呢部车？'))return;try{await updateCars(cars=>{const i=cars.findIndex(x=>x.id===editing);if(i>=0)cars.splice(i,1);});closeForm();await load();}catch(e){alert('删除失败：'+e);}}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));render();});
-document.getElementById('q').addEventListener('input',e=>{q=e.target.value;render();});
-document.getElementById('mask').addEventListener('click',e=>{if(e.target.id==='mask')closeForm();});
-window.addEventListener('focus',load);
+async function removeCar(){
+  if(!editing)return;if(!confirm("确定删除呢部车？"))return;
+  try{await updateData(data=>{const i=data.cars.findIndex(x=>x.id===editing);if(i>=0)data.cars.splice(i,1);Object.keys(data.payments).forEach(k=>{if(k.startsWith(editing+":"))delete data.payments[k];});});closeForm();await load();}
+  catch(e){alert("删除失败："+e);}
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));render();});
+document.getElementById("q").addEventListener("input",e=>{q=e.target.value;render();});
+document.getElementById("mask").addEventListener("click",e=>{if(e.target.id==="mask")closeForm();});
+window.addEventListener("focus",load);
 load();
 </script>
 </body>
