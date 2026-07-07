@@ -76,7 +76,7 @@
     </div>
     <div class="search"><input id="q" placeholder="搜车牌或租户"></div>
     <div class="list" id="list"></div>
-    <div class="foot">收到租撳「已收」，未收月份会继续累计，唔会月初自动消失。</div>
+    <div class="foot">每次收款可录金额，分几次交会自动累计，欠款唔会月初自动消失。</div>
     <button class="fab" onclick="openForm()">+ 加车</button>
   </div>
   <div id="setup" class="setup" style="display:none"></div>
@@ -94,6 +94,17 @@
     <button class="del" id="delBtn" style="display:none" onclick="removeCar()">删除呢部车</button>
   </div>
 </div>
+<div class="mask" id="payMask">
+  <div class="sheet">
+    <h3 id="payTitle">收款</h3>
+    <div class="field"><label>收款月份</label><input id="p_month" disabled></div>
+    <div class="field"><label>本月应收 / 已收 / 尚欠</label><input id="p_summary" disabled></div>
+    <div class="field"><label>本次收款金额</label><input id="p_amount" inputmode="numeric"></div>
+    <div class="field"><label>收款日期</label><input id="p_date" type="date"></div>
+    <div class="field"><label>备注</label><input id="p_note" placeholder="现金 / 微信 / 补租"></div>
+    <div class="srow"><button class="b cancel" onclick="closePay()">取消</button><button class="b save" onclick="submitPay()">保存收款</button></div>
+  </div>
+</div>
 <script>
 const TELEGRAPH_PATH="jt-rent-data-07-07";
 const TELEGRAPH_TOKEN="a8311f6f8da7a98be73a5581275cdd99eee7c36803531e3942d18dd66d6d";
@@ -101,11 +112,12 @@ const TELEGRAPH_TITLE="jt-rent-data";
 const TELEGRAPH_AUTHOR="Jiantian";
 const TRACK_START_MONTH="2026-07";
 const today=new Date();today.setHours(0,0,0,0);
-let DATA={version:2,track_start:TRACK_START_MONTH,cars:[],payments:{}},CARS=[],tab="cui",q="",editing=null;
+let DATA={version:2,track_start:TRACK_START_MONTH,cars:[],payments:{}},CARS=[],tab="cui",q="",editing=null,paying=null;
 
 const dataUrl=()=>`https://api.telegra.ph/getPage/${TELEGRAPH_PATH}?return_content=true&_=${Date.now()}`;
 const DIM=(y,m)=>new Date(y,m+1,0).getDate();
 const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const money=n=>(n||0).toLocaleString();
 const ym=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
 const thisMonth=()=>ym(today);
 function parseYM(m){const a=m.split("-").map(Number);return new Date(a[0],a[1]-1,1);}
@@ -116,6 +128,7 @@ function paymentKey(id,m){return id+":"+m;}
 function pageContent(data){return JSON.stringify([{tag:"pre",children:[JSON.stringify(data)]}]);}
 
 function normalizeData(data){
+  if(!data)return {version:2,track_start:TRACK_START_MONTH,cars:[],payments:{}};
   if(Array.isArray(data)){
     const payments={};
     const cars=data.map(c=>{
@@ -173,7 +186,17 @@ function showSetup(err){
   const s=document.getElementById("setup");s.style.display="block";
   s.innerHTML='<div class="box"><h2>云端连接失败</h2><p>数据已设置为多人共享在线同步。请确认手机有网络，然后再刷新。</p>'+(err?'<p class="err">'+err+"</p>":"")+'<button class="b save" style="width:100%;margin-top:6px" onclick="load()">重新连接</button></div>';
 }
-function isPaid(c,m){return !!DATA.payments[paymentKey(c.id,m)];}
+function getPayments(data,c,m){
+  const v=(data.payments||{})[paymentKey(c.id,m)];
+  if(Array.isArray(v))return v;
+  if(v&&typeof v==="object")return [{amount:c.rent||0,date:v.paid_at||v.date||iso(today),note:v.note||""}];
+  return [];
+}
+function paidAmount(data,c,m){return getPayments(data,c,m).reduce((a,p)=>a+(parseInt(p.amount)||0),0);}
+function monthRent(c){return parseInt(c.rent)||0;}
+function monthOwe(data,c,m){return Math.max(monthRent(c)-paidAmount(data,c,m),0);}
+function isPaid(c,m){return monthRent(c)>0&&monthOwe(DATA,c,m)<=0;}
+function hasPaidThisMonth(c){return paidAmount(DATA,c,thisMonth())>0;}
 function monthDueDate(c,m){const d=parseYM(m);return new Date(d.getFullYear(),d.getMonth(),Math.min(c.due_day,DIM(d.getFullYear(),d.getMonth())));}
 function dueDate(day){return monthDueDate({due_day:day},thisMonth());}
 function collectableMonths(c,includeTomorrow=true){
@@ -182,7 +205,8 @@ function collectableMonths(c,includeTomorrow=true){
   const out=[];let m=c.active_from||DATA.track_start||TRACK_START_MONTH;
   while(cmpYM(m,thisMonth())<=0){
     const due=monthDueDate(c,m);
-    if(due<=limit&&!isPaid(c,m))out.push({month:m,due,diff:Math.round((due-today)/86400000)});
+    const paid=paidAmount(DATA,c,m),owe=monthOwe(DATA,c,m);
+    if(due<=limit&&owe>0)out.push({month:m,due,paid,owe,diff:Math.round((due-today)/86400000)});
     m=nextYM(m);
   }
   return out;
@@ -193,12 +217,13 @@ function status(c){
   const unpaid=collectableMonths(c,true);
   if(unpaid.length){
     const first=unpaid[0],over=unpaid.filter(x=>x.diff<0);
+    if(first.paid>0&&unpaid.length===1)return{key:over.length?"od":"due",cls:over.length?"od":"due",label:"欠¥"+money(first.owe),diff:first.diff,unpaid};
     if(over.length)return{key:"od",cls:"od",label:unpaid.length>1?"欠"+unpaid.length+"期":"逾期"+(-first.diff)+"天",diff:first.diff,unpaid};
     if(first.diff===0)return{key:"due",cls:"due",label:"今日到期",diff:first.diff,unpaid};
     if(first.diff===1)return{key:"due",cls:"due",label:"明日到期",diff:first.diff,unpaid};
   }
   const due=dueDate(c.due_day),diff=Math.round((due-today)/86400000);
-  if(paidThisMonth(c))return{key:"ok",cls:"ok",label:"本月已收",diff,unpaid:[]};
+  if(paidThisMonth(c))return{key:"ok",cls:"ok",label:"本月收齐",diff,unpaid:[]};
   if(diff<0)return{key:"norm",cls:"norm",label:"下月待收",diff:9999,unpaid:[]};
   return{key:"norm",cls:"norm",label:(due.getMonth()+1)+"月"+due.getDate()+"日到期",diff,unpaid:[]};
 }
@@ -216,10 +241,10 @@ function render(){
   const cuiRows=rows.filter(r=>needCui(r.s));
   const odN=cuiRows.filter(r=>r.s.key==="od").length;
   const qi=cuiRows.reduce((a,r)=>a+(r.s.unpaid&&r.s.unpaid.length?r.s.unpaid.length:1),0);
-  const amt=cuiRows.reduce((a,r)=>a+(r.c.rent||0)*(r.s.unpaid&&r.s.unpaid.length?r.s.unpaid.length:1),0);
+  const amt=cuiRows.reduce((a,r)=>a+(r.s.unpaid||[]).reduce((x,m)=>x+m.owe,0),0);
   document.getElementById("cui").textContent=cuiRows.length;
-  document.getElementById("sub").innerHTML='逾期 <span class="od">'+odN+'</span> 部<span class="sep">·</span>欠租 '+qi+' 期<span class="sep">·</span>应催 ¥'+amt.toLocaleString()+'<span class="sep">·</span>共 '+CARS.length+" 部车";
-  if(tab==="cui")rows=cuiRows;else if(tab==="ok")rows=rows.filter(r=>paidThisMonth(r.c));
+  document.getElementById("sub").innerHTML='逾期 <span class="od">'+odN+'</span> 部<span class="sep">·</span>欠租 '+qi+' 期<span class="sep">·</span>应催 ¥'+money(amt)+'<span class="sep">·</span>共 '+CARS.length+" 部车";
+  if(tab==="cui")rows=cuiRows;else if(tab==="ok")rows=rows.filter(r=>hasPaidThisMonth(r.c));
   if(q){const k=q.trim();rows=rows.filter(r=>(r.c.plate||"").includes(k)||(r.c.tenant||"").includes(k));}
   if(tab==="cui")rows.sort((a,b)=>a.s.diff-b.s.diff);else rows.sort((a,b)=>(a.c.due_day||99)-(b.c.due_day||99));
   const list=document.getElementById("list");
@@ -227,26 +252,56 @@ function render(){
   const showActs=tab!=="all";
   list.innerHTML=rows.map(({c,s})=>{
     const phone=(c.phone||"").trim();
-    const amtHtml=c.rent?'<span class="yen">¥</span>'+c.rent.toLocaleString():"-";
-    const owe=s.unpaid&&s.unpaid.length?"　欠租 "+s.unpaid.map(x=>monthLabel(x.month)).join("、"):"";
+    const amtHtml=c.rent?'<span class="yen">¥</span>'+money(c.rent):"-";
+    const owe=s.unpaid&&s.unpaid.length?"　欠租 "+s.unpaid.map(x=>monthLabel(x.month)+(x.paid?" 已收¥"+money(x.paid)+" 欠¥"+money(x.owe):" 欠¥"+money(x.owe))).join("、"):"";
     const who="租户 "+(c.tenant||"-")+"　交租日 "+(c.due_day||"-")+"号"+owe+(c.note?"　"+c.note:"");
     let acts="";
     if(showActs){
       const call=phone?'<a class="b call" href="tel:'+phone+'">致电</a>':'<span class="b call off">无电话</span>';
-      const paidText=s.unpaid&&s.unpaid.length>1?"收一期":"已收";
-      const main=tab==="ok"?'<button class="b undo" onclick="undo('+c.id+')">撤销</button>':'<button class="b paid" onclick="markPaid('+c.id+')">'+paidText+"</button>";
+      const main=tab==="ok"?'<button class="b undo" onclick="undo('+c.id+')">撤销</button>':'<button class="b paid" onclick="openPay('+c.id+')">收款</button>';
       acts='<div class="acts">'+call+'<button class="b edit" onclick="openForm('+c.id+')">改</button>'+main+"</div>";
     }
     const rc=showActs?"":' onclick="openForm('+c.id+')" style="cursor:pointer"';
     return '<div class="item"'+rc+'><div class="ihead"><div><div class="plate">'+(c.plate||"-")+'</div><div class="who">'+who+'</div></div><div class="right"><div class="amt">'+amtHtml+'</div><span class="pill '+s.cls+'">'+s.label+"</span></div></div>"+acts+"</div>";
   }).join("");
 }
-async function markPaid(id){
-  try{await updateData(data=>{DATA=data;const c=data.cars.find(x=>x.id===id);const m=c&&collectableMonths(c,true)[0];if(c&&m)data.payments[paymentKey(id,m.month)]={paid_at:iso(today)};});}
-  catch(e){alert("保存失败："+e);}
+function openPay(id){
+  const c=CARS.find(x=>x.id===id),m=c&&collectableMonths(c,true)[0];
+  if(!c||!m){alert("呢部车暂时冇到期欠款。");return;}
+  paying={id,month:m.month};
+  document.getElementById("payTitle").textContent="收款 - "+(c.plate||"");
+  document.getElementById("p_month").value=monthLabel(m.month);
+  document.getElementById("p_summary").value="应收 ¥"+money(monthRent(c))+" / 已收 ¥"+money(m.paid)+" / 尚欠 ¥"+money(m.owe);
+  document.getElementById("p_amount").value=m.owe||"";
+  document.getElementById("p_date").value=iso(today);
+  document.getElementById("p_note").value="";
+  document.getElementById("payMask").classList.add("on");
+}
+function closePay(){document.getElementById("payMask").classList.remove("on");paying=null;}
+async function submitPay(){
+  if(!paying)return;
+  const amount=parseInt(document.getElementById("p_amount").value.trim());
+  const date=document.getElementById("p_date").value||iso(today);
+  const note=document.getElementById("p_note").value.trim();
+  if(!amount||amount<=0){alert("请输入收款金额。");return;}
+  try{
+    await updateData(data=>{
+      const c=data.cars.find(x=>x.id===paying.id);if(!c)return;
+      const key=paymentKey(paying.id,paying.month);
+      const list=getPayments(data,c,paying.month);
+      list.push({amount,date,note});
+      data.payments[key]=list;
+    });
+    closePay();await load();
+  }catch(e){alert("保存失败："+e);}
 }
 async function undo(id){
-  try{await updateData(data=>{delete data.payments[paymentKey(id,thisMonth())];});}
+  try{await updateData(data=>{
+    const c=data.cars.find(x=>x.id===id);if(!c)return;
+    const key=paymentKey(id,thisMonth()),v=data.payments[key];
+    if(Array.isArray(v)){v.pop();if(!v.length)delete data.payments[key];}
+    else if(v)delete data.payments[key];
+  });}
   catch(e){alert("失败："+e);}
 }
 function openForm(id){
@@ -276,6 +331,7 @@ async function removeCar(){
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));render();});
 document.getElementById("q").addEventListener("input",e=>{q=e.target.value;render();});
 document.getElementById("mask").addEventListener("click",e=>{if(e.target.id==="mask")closeForm();});
+document.getElementById("payMask").addEventListener("click",e=>{if(e.target.id==="payMask")closePay();});
 window.addEventListener("focus",load);
 load();
 </script>
